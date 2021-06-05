@@ -14,6 +14,14 @@ const navs = [
     }
 ];
 
+/**
+ *
+ * @param label
+ * @param to
+ * @param activeOnlyWhenExact
+ * @returns {*}
+ * @constructor
+ */
 const NavLink = ({label, to, activeOnlyWhenExact}) => {
     return (
         <Route
@@ -35,6 +43,11 @@ const NavLink = ({label, to, activeOnlyWhenExact}) => {
 };
 
 class Navbar extends Component {
+    /**
+     *
+     * @param navs
+     * @returns result
+     */
     showNav = (navs) => {
         let result = null;
         if (navs.length > 0) {
@@ -55,14 +68,6 @@ class Navbar extends Component {
         return (
             <nav className="navbar navbar-expand-sm navbar-light bg-light">
                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                    {/*<li className="nav-item active">*/}
-                    {/*    /!* eslint-disable-next-line jsx-a11y/anchor-is-valid *!/*/}
-                    {/*    <a className="nav-link" href="#">Home</a>*/}
-                    {/*</li>*/}
-                    {/*<li className="nav-item">*/}
-                    {/*    /!* eslint-disable-next-line jsx-a11y/anchor-is-valid *!/*/}
-                    {/*    <a className="nav-link" href="#">Products</a>*/}
-                    {/*</li>*/}
                     { this.showNav(navs)}
                 </ul>
             </nav>

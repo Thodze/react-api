@@ -4,6 +4,11 @@ import ProductItem from "../../components/ProductItem/ProductItem";
 
 class ProductListPage extends Component {
 
+    /**
+     *
+     * @param products
+     * @returns {null}
+     */
     shoProducts = (products) => {
         let result = null;
         if (products.length > 0) {
