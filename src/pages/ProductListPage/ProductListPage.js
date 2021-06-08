@@ -31,7 +31,7 @@ class ProductListPage extends Component {
      * @param products
      * @returns {null}
      */
-    shoProducts = (products) => {
+    showProducts = (products) => {
         let result = null;
         if (products.length > 0) {
             result = products.map((product, index) => {
@@ -40,12 +40,38 @@ class ProductListPage extends Component {
                         key={index}
                         product={product}
                         index={index}
+                        onDelete={this.onDelete}
                     />
                 );
             });
         }
         return result;
     };
+
+    onDelete = (id) => {
+        apiCaller(`products/${id}`, 'DELETE', null).then(res => {
+            let { products } = this.state;
+            if (res.status === 200) {
+                let index = this.findIndex(products, id);
+                if (index !== -1 ){
+                    products.splice(index, 1);
+                    this.setState({
+                        products : products
+                    })
+                }
+            }
+        });
+    };
+
+    findIndex = (products, id) => {
+        let result = -1;
+        products.forEach((product, index) => {
+            if (product.id === id) {
+                result = index;
+            }
+        });
+        return result;
+    }
 
     render() {
         let { products } = this.state;
@@ -64,7 +90,7 @@ class ProductListPage extends Component {
             <div className="col-md-12">
                 <Link to="/products/add" className="btn btn-success mt-3 mb-3">Add Product</Link>
                 <ProductList>
-                    {this.shoProducts(products)}
+                    {this.showProducts(products)}
                 </ProductList>
             </div>
         );
