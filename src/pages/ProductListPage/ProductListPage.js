@@ -3,6 +3,7 @@ import ProductList from "../../components/ProductList/ProductList";
 import ProductItem from "../../components/ProductItem/ProductItem";
 import {connect} from "react-redux";
 import apiCaller from "../../utils/apiCaller";
+import { Link } from "react-router-dom";
 
 class ProductListPage extends Component {
 
@@ -61,7 +62,7 @@ class ProductListPage extends Component {
         });*/
         return (
             <div className="col-md-12">
-                <button type="button" className="btn btn-success mt-3 mb-3">Add Product</button>
+                <Link to="/products/add" className="btn btn-success mt-3 mb-3">Add Product</Link>
                 <ProductList>
                     {this.shoProducts(products)}
                 </ProductList>
