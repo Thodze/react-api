@@ -4,6 +4,7 @@ import ProductItem from "../../components/ProductItem/ProductItem";
 import {connect} from "react-redux";
 import apiCaller from "../../utils/apiCaller";
 import { Link } from "react-router-dom";
+import { actionFetchProductsRequest } from "../../actions";
 
 class ProductListPage extends Component {
 
@@ -19,11 +20,7 @@ class ProductListPage extends Component {
     }
 
     componentDidMount() {
-        apiCaller('products', 'GET', null).then(res => {
-            this.setState({
-                products : res.data
-            });
-        });
+        this.props.fetchAllProducts();
     };
 
     /**
@@ -74,7 +71,7 @@ class ProductListPage extends Component {
     }
 
     render() {
-        let { products } = this.state;
+        let { products } = this.props;
         // let products = [];
         /*axios({
             method: 'GET',
@@ -103,4 +100,12 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, null)(ProductListPage);
+const mapDispatchToProps = (dispatch, props) => {
+    return  {
+        fetchAllProducts : () => {
+            dispatch(actionFetchProductsRequest());
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListPage);
