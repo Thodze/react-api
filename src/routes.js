@@ -18,12 +18,12 @@ const routes = [
     {
         path : '/products/add',
         exact : true,
-        main: () => <ProductActionPage/>
+        main: ({history}) => <ProductActionPage history={history}/>
     },
     {
         path : '/products/:id/edit',
         exact : true,
-        main: () => <ProductActionPage/>
+        main: ({match, history}) => <ProductActionPage match={match} history={history}/>
     },
     {
         path : '',

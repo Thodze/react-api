@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import callAPI from "../../utils/apiCaller";
-import { createBrowserHistory } from 'history';
-let history = createBrowserHistory();
+// import { createBrowserHistory } from 'history';
+// let history = createBrowserHistory();
 
 class ProductActionPage extends Component {
     constructor(props) {
@@ -14,10 +14,22 @@ class ProductActionPage extends Component {
         };
     }
 
-    /**
-     *
-     * @param e
-     */
+    componentDidMount() {
+        let {match} = this.props;
+        if (match) {
+            let id = match.params.id;
+            callAPI(`products/${id}`, 'GET', null).then(res => {
+                let {data} = res;
+                this.setState({
+                    id: data.id,
+                    name: data.name,
+                    price: data.price,
+                    status: data.status
+                });
+            });
+        }
+    }
+
     onChange = (e) => {
         let target = e.target;
         let name = target.name;
@@ -27,28 +39,45 @@ class ProductActionPage extends Component {
         });
     };
 
+    onBack = (e) => {
+        e.preventDefault();
+        let {history} = this.props;
+        history.goBack();
+    };
+
     onSave = (e) => {
         e.preventDefault();
-        let { name, price, status } = this.state;
-        callAPI('products', 'POST', {
-            name: name,
-            price: price,
-            status: status
-        }).then(res => {
-            history.back();
-        });
+        let {history} = this.props;
+        let {id, name, price, status} = this.state;
+        if (id) {
+            callAPI(`products/${id}`, 'PUT', {
+                name: name,
+                price: price,
+                status: status
+            }).then(res => {
+                history.goBack();
+            });
+        } else {
+            callAPI('products', 'POST', {
+                name: name,
+                price: price,
+                status: status
+            }).then(res => {
+                history.goBack();
+            });
+        }
     };
 
     render() {
 
-        let {name, price, status} = this.state;
-
+        let {id, name, price, status} = this.state;
+        let actionName = id ? 'Edit' : 'Add';
         return (
             <div className="col-md-12">
                 <div className="card mt-3">
-                    <div className="card-header bg-primary">Add Products</div>
+                    <div className="card-header bg-success">{actionName} Products</div>
                     <div className="card-body">
-                        <form onSubmit={ this.onSave }>
+                        <form onSubmit={this.onSave}>
                             <div className="form-group">
                                 <label className="col-sm-1-12 col-form-label">Name</label>
                                 <div className="col-sm-1-12">
@@ -82,11 +111,13 @@ class ProductActionPage extends Component {
                                     name="status"
                                     value={status}
                                     onChange={this.onChange}
+                                    checked={status}
                                 />
                                 <label className="form-check-label">Exist</label>
                             </div>
-                            <div className="form-group">
-                                <button type="submit" className="btn btn-primary mt-2">Save</button>
+                            <div className="form-group mt-2">
+                                <button type="button" onClick={this.onBack} className="btn btn-danger mr-2">Back</button>
+                                <button type="submit" className="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
