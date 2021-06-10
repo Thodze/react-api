@@ -45,3 +45,33 @@ export const actionAddProduct = (product) => {
         product
     }
 };
+
+export const actionGetProductRequest = (id) => {
+    return (dispatch) => {
+        return callAPI(`products/${id}`, 'GET', null).then(res => {
+            dispatch(actionGetProduct(res.data));
+        });
+    };
+};
+
+export const actionGetProduct = (product) => {
+    return {
+        type: Types.EDIT_PRODUCTS,
+        product
+    }
+};
+
+export const actionUpdateProductRequest = (product) => {
+    return (dispatch) => {
+        return callAPI(`products/${product.id}`, 'PUT', product).then(res => {
+            dispatch(actionUpdateProduct(res.data));
+        });
+    };
+};
+
+export const actionUpdateProduct = (product) => {
+    return {
+        type: Types.UPDATE_PRODUCTS,
+        product
+    }
+};

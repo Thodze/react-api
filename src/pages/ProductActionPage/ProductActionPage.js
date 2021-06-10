@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import callAPI from "../../utils/apiCaller";
-import { connect } from "react-redux";
-import { actionAddProductRequest } from "../../actions";
+import {connect} from "react-redux";
+import {actionAddProductRequest, actionGetProductRequest, actionUpdateProductRequest} from "../../actions";
 // import { createBrowserHistory } from 'history';
 // let history = createBrowserHistory();
 
@@ -20,15 +19,19 @@ class ProductActionPage extends Component {
         let {match} = this.props;
         if (match) {
             let id = match.params.id;
-            callAPI(`products/${id}`, 'GET', null).then(res => {
-                let {data} = res;
-                this.setState({
-                    id: data.id,
-                    name: data.name,
-                    price: data.price,
-                    status: data.status
-                });
-            });
+            this.props.editProduct(id);
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps && nextProps.itemEditing) {
+            let {itemEditing} = nextProps;
+            this.setState({
+                id: itemEditing.id,
+                name: itemEditing.name,
+                price: itemEditing.price,
+                status: itemEditing.status
+            })
         }
     }
 
@@ -59,13 +62,8 @@ class ProductActionPage extends Component {
         };
 
         if (id) {
-            callAPI(`products/${id}`, 'PUT', {
-                name: name,
-                price: price,
-                status: status
-            }).then(res => {
-                history.goBack();
-            });
+            this.props.updateProduct(product);
+            history.goBack();
         } else {
             this.props.addProduct(product);
             history.goBack();
@@ -120,7 +118,8 @@ class ProductActionPage extends Component {
                                 <label className="form-check-label">Exist</label>
                             </div>
                             <div className="form-group mt-2">
-                                <button type="button" onClick={this.onBack} className="btn btn-danger mr-2">Back</button>
+                                <button type="button" onClick={this.onBack} className="btn btn-danger mr-2">Back
+                                </button>
                                 <button type="submit" className="btn btn-primary">Save</button>
                             </div>
                         </form>
@@ -131,12 +130,24 @@ class ProductActionPage extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        itemEditing: state.itemEditing
+    }
+}
+
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        addProduct : (product) => {
+        addProduct: (product) => {
             dispatch(actionAddProductRequest(product));
+        },
+        editProduct: (id) => {
+            dispatch(actionGetProductRequest(id));
+        },
+        updateProduct: (product) => {
+            dispatch(actionUpdateProductRequest(product));
         }
     }
 };
 
-export default connect(null, mapDispatchToProps)(ProductActionPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductActionPage);
