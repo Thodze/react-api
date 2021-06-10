@@ -30,3 +30,18 @@ export const actionDeleteProduct = (id) => {
         id
     }
 };
+
+export const actionAddProductRequest = (product) => {
+    return (dispatch) => {
+        return callAPI('products', 'POST', product).then(res => {
+            dispatch(actionAddProduct(res.data));
+        });
+    };
+};
+
+export const actionAddProduct = (product) => {
+    return {
+        type: Types.ADD_PRODUCTS,
+        product
+    }
+};
